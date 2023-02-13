@@ -2,12 +2,22 @@
   (:require
     [com.fulcrologic.fulcro.application :as app]
     [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
-    [com.fulcrologic.fulcro.dom :as dom]))
+    [com.fulcrologic.fulcro.dom :as dom]
+    ))
 
 (defonce app (app/fulcro-app))
 
+
+(defsc Person [this {:person/keys [name age]}]
+  (dom/div
+    (dom/p "Name: " name)
+    (dom/p "Age: " age)))
+
+(def ui-person (comp/factory Person))
+
 (defsc Root [this props]
-  (dom/div "TODO"))
+  (dom/div
+    (ui-person {:person/name "Daniel" :person/age 22})))
 
 (defn ^:export init
   "Shadow-cljs sets this up to be our entry-point function. See shadow-cljs.edn `:init-fn` in the modules of the main build."
