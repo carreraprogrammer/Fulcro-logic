@@ -1,0 +1,1 @@
+{"version":3,"sources":["com/fulcrologic/fulcro/inspect/dom_picker_preload.cljs"],"mappings":";AAIA,AAACA","names":["com.fulcrologic.fulcro.inspect.element-picker/install!"],"sourcesContent":["(ns com.fulcrologic.fulcro.inspect.dom-picker-preload\n  (:require\n    [com.fulcrologic.fulcro.inspect.element-picker :as ele]))\n\n(ele/install!)\n"]}
