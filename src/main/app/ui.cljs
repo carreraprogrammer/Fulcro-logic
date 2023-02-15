@@ -4,18 +4,20 @@
     [com.fulcrologic.fulcro.components :as comp :refer [defsc]]))
 
 (defsc Person [this {:person/keys [name age]}]
-  {:initial-state (fn [{:keys [name age] :as params}] {:person/name name :person/age age}) }
+  {:query         [:person/name :person/age]
+   :initial-state (fn [{:keys [name age] :as params}] {:person/name name :person/age age})}
   (dom/li
     (dom/h5 (str name "(age: " age ")"))))
 
 (def ui-person (comp/factory Person {:keyfn :person/name}))
 
-(defsc PersonList [this {:list/keys [label people]}]
-  {:initial-state
+(defsc PersonList [this {:keys [list/label list/people]}]
+  {:query [:list/label {:list/people (comp/get-query Person)}]
+   :initial-state
    (fn [{:keys [label]}]
      {:list/label  label
       :list/people (if (= label "Friends")
-                     [(comp/get-initial-state Person {:name "Sally" :age 32}) ; Here, with comp/get-initial-state, we are defining the initial state of Person, that is gonna be taken at the moment of create an instance of the component, avoiding to search in a big map and improve the time of research
+                     [(comp/get-initial-state Person {:name "Sally" :age 32})
                       (comp/get-initial-state Person {:name "Joe" :age 22})]
                      [(comp/get-initial-state Person {:name "Fred" :age 11})
                       (comp/get-initial-state Person {:name "Bobby" :age 55})])})}
