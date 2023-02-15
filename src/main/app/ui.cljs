@@ -30,8 +30,10 @@
 
 ; Root's initial state becomes the entire app's initial state!
 (defsc Root [this {:keys [friends enemies]}]
-  {:initial-state (fn [params] {:friends (comp/get-initial-state PersonList {:label "Friends"})
-                                :enemies (comp/get-initial-state PersonList {:label "Enemies"})}) }
+  {:query         [{:friends (comp/get-query PersonList)}
+                   {:enemies (comp/get-query PersonList)}]
+   :initial-state (fn [params] {:friends (comp/get-initial-state PersonList {:label "Friends"})
+                                :enemies (comp/get-initial-state PersonList {:label "Enemies"})})}
   (dom/div
     (ui-person-list friends)
     (ui-person-list enemies)))
