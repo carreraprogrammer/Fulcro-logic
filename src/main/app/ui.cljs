@@ -1,7 +1,8 @@
 (ns app.ui
   (:require
     [com.fulcrologic.fulcro.dom :as dom]
-    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]))
+    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
+    [app.mutations :as api]))
 
 (defsc Person [this {:person/keys [name age]} {:keys [onDelete]}] ; (2)
   {:query         [:person/name :person/age]
@@ -21,7 +22,7 @@
                       (comp/get-initial-state Person {:name "Joe" :age 22})]
                      [(comp/get-initial-state Person {:name "Fred" :age 11})
                       (comp/get-initial-state Person {:name "Bobby" :age 55})])})}
-  (let [delete-person (fn [name] (println label "asked to delete" name))] ; (1)
+  (let [delete-person (fn [name] (comp/transact! this [(api/delete-person {:list-name label :name name})]))]; (1)
     (dom/div
       (dom/h4 label)
       (dom/ul
