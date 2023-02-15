@@ -15,7 +15,7 @@
    (fn [{:keys [label]}]
      {:list/label  label
       :list/people (if (= label "Friends")
-                     [(comp/get-initial-state Person {:name "Sally" :age 32})
+                     [(comp/get-initial-state Person {:name "Sally" :age 32}) ; Here, with comp/get-initial-state, we are defining the initial state of Person, that is gonna be taken at the moment of create an instance of the component, avoiding to search in a big map and improve the time of research
                       (comp/get-initial-state Person {:name "Joe" :age 22})]
                      [(comp/get-initial-state Person {:name "Fred" :age 11})
                       (comp/get-initial-state Person {:name "Bobby" :age 55})])})}
