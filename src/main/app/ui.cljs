@@ -1,16 +1,24 @@
 (ns app.ui
   (:require
-    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
-    [com.fulcrologic.fulcro.dom :as dom]))
+    [com.fulcrologic.fulcro.dom :as dom]
+    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]))
 
-(defsc Person [this {:person/keys [name age]}]              ; The person component is destructuring the state
+(defsc Person [this {:person/keys [name age]}]
+  {:initial-state (fn [{:keys [name age] :as params}] {:person/name name :person/age age}) }
   (dom/li
-    (dom/h5 (str name " (age: " age ")"))))
+    (dom/h5 (str name "(age: " age ")"))))
 
-;; The keyfn generates a React key for each element based on props. See React documentation on keys.
-(def ui-person (comp/factory Person {:keyfn :person/name})) ;ui-person is creating an instance of Person component using a key based on the name
+(def ui-person (comp/factory Person {:keyfn :person/name}))
 
 (defsc PersonList [this {:list/keys [label people]}]
+  {:initial-state
+   (fn [{:keys [label]}]
+     {:list/label  label
+      :list/people (if (= label "Friends")
+                     [(comp/get-initial-state Person {:name "Sally" :age 32})
+                      (comp/get-initial-state Person {:name "Joe" :age 22})]
+                     [(comp/get-initial-state Person {:name "Fred" :age 11})
+                      (comp/get-initial-state Person {:name "Bobby" :age 55})])})}
   (dom/div
     (dom/h4 label)
     (dom/ul
@@ -18,13 +26,10 @@
 
 (def ui-person-list (comp/factory PersonList))
 
-(defsc Root [this {:keys [ui/react-key]}]
-  (let [ui-data {:friends {:list/label "Friends" :list/people
-                           [{:person/name "Sally" :person/age 32}
-                            {:person/name "Joe" :person/age 22}]}
-                 :enemies {:list/label "Enemies" :list/people
-                           [{:person/name "Fred" :person/age 11}
-                            {:person/name "Bobby" :person/age 55}]}}]
-    (dom/div
-      (ui-person-list (:friends ui-data))
-      (ui-person-list (:enemies ui-data)))))
+; Root's initial state becomes the entire app's initial state!
+(defsc Root [this {:keys [friends enemies]}]
+  {:initial-state (fn [params] {:friends (comp/get-initial-state PersonList {:label "Friends"})
+                                :enemies (comp/get-initial-state PersonList {:label "Enemies"})}) }
+  (dom/div
+    (ui-person-list friends)
+    (ui-person-list enemies)))
