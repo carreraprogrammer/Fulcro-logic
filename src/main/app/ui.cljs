@@ -9,7 +9,7 @@
    :ident         (fn [] [:person/id (:person/id props)]) ; (1)
    :initial-state (fn [{:keys [id name age] :as params}] {:person/id id :person/name name :person/age age})} ; (3)
   (dom/li
-    (dom/h5 (str name " (age: " age ")") (dom/button {:onClick #(onDelete id)} "X")))) ; (4)
+    (dom/h5 (str name " (age: " age ")") (dom/button {:onClick #(onDelete id)} "X"))))
 
 (def ui-person (comp/factory Person {:keyfn :person/id}))
 
@@ -25,7 +25,7 @@
                       (comp/get-initial-state Person {:id 2 :name "Joe" :age 22})]
                      [(comp/get-initial-state Person {:id 3 :name "Fred" :age 11})
                       (comp/get-initial-state Person {:id 4 :name "Bobby" :age 55})])})}
-  (let [delete-person (fn [person-id] (comp/transact! this [(api/delete-person {:list/id id :person/id person-id})]))] ; (4)
+  (let [delete-person (fn [person-id] (comp/transact! this [(api/delete-person {:list/id id :person/id person-id})]))]  ; (4)
     (dom/div
       (dom/h4 label)
       (dom/ul
